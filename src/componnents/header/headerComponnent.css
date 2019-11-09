@@ -3,21 +3,26 @@ h2{
 }
 
 ul li{
-    font-style: italic;
     font-weight: 700;
     color: black;
 }
 ul li a{
     color: white;
-    font-size: 18px;
+    font-size: 24px;
     font-weight: bold;
 }
 
 ul li a:hover{
     text-decoration: none;
+    color: black;
 }
 
 li{
     display: inline-block;
     margin: 5px;
+}
+
+.fa-mobile{
+    font-size: 30px;
+    padding: 10px;
 }
