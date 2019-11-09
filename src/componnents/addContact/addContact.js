@@ -48,10 +48,9 @@ class AddContact extends Component{
                     </div>
                     <div className="form-check">
                         <input className="form-check-input" type="radio" name="usersex" id="usersex2" onClick={this.onSex} value="men" />
-                        <label className="form-check-label" htmlFor="usersex2">
-                            Men
-                        </label>
+                        <label className="form-check-label" htmlFor="usersex2">Men</label>
                     </div>
+                    <input type="checkbox" className="Vip" /> VIP<br />
                     <textarea type="text" placeholder="Description" className="form-control" onChange={this.getDescription} />
                     <button className="btn btn-success" type="submit">New Contact</button>
                 </form>
