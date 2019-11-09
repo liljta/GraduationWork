@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import { BrowserRouter as Router, Route, Switch} from "react-router-dom";
+import { BrowserRouter as Router, Route, Redirect, Switch} from "react-router-dom";
 
 // Componnents
 import Header from "./componnents/header/headerComponnent";
@@ -20,7 +20,8 @@ class App extends React.Component  {
             { id: 3, vip: false, sex: "women", avatar: 72 , contactName: "Jesica Smith", contactDesc: "Jesica Smith Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation" },
             { id: 4, vip: false, sex: "men", avatar: 95 , contactName: "Jack Sparrow", contactDesc: "Jack Sparrow Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation" }
         ],
-        findContact: ""
+        findContact: "",
+        redirect: false
     };
 
     RemoveContact = (id) => {
@@ -76,9 +77,12 @@ class App extends React.Component  {
 
         this.setState((state) => {
             return{
-                List: newContactArr
+                List: newContactArr,
+                redirect: "/"
             }
-        })
+        });
+
+
     };
 
     onSearch = (searchValue) => {
@@ -99,6 +103,12 @@ class App extends React.Component  {
     };
 
     render(){
+        const redirectTo = this.state.redirect;
+        if (redirectTo)
+        {
+            this.setState({redirect: false});
+            return <Router><Redirect  to={redirectTo} /></Router>
+        }
         const showContacts = this.onShowContact(this.state.List, this.state.findContact);
         return(
             <section className="row-section">
