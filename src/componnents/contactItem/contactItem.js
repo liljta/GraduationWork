@@ -74,7 +74,7 @@ class ContactItem extends React.Component{
 
                 </div>
                 <div className="media-right align-self-center" onClick={this.onContactClick}>
-                    <a href="#" className={btnContactName}>{this.state.btnContectText}</a>
+                    <button type="button" className="btn btnContactName">{this.state.btnContectText}</button>
                 </div>
                 <div className="media-right align-self-center">
                     <button type="button" className="btn btn-success" onClick={this.onAvatar}>Rand avatar</button>

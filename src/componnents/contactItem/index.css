@@ -18,3 +18,13 @@
     background: #1cd25e;
 }
 
+.btnContactName:hover{
+    background-color: #64256b;
+    box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
+}
+
+.btnContactName{
+    border-radius: 30px;
+    background: #6B456A;
+    color: white;
+}
