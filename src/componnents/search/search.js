@@ -6,7 +6,7 @@ class Search extends React.Component{
 
     state = {
         search: " "
-    }
+    };
 
     onSearchInput = (e) =>{
         const findContact = e.target.value;
@@ -14,7 +14,7 @@ class Search extends React.Component{
             search: findContact
         });
         this.props.onSearch(findContact);
-    }
+    };
 
     render(){
         console.log("Search component = ", this.props);

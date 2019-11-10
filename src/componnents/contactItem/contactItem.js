@@ -8,14 +8,11 @@ class ContactItem extends React.Component{
         btnContectText: "Contact Now",
         avatar: this.props.avatar,
         contactName: this.props.contactName,
-    }
+    };
 
     onAvatar = () => {
-        const ava = Math.floor(Math.random() * (99 - 1 + 1)) + 1;
-        this.setState({
-            avatar: ava
-        })
-    }
+        this.props.onAvatar();
+    };
 
     onContactClick = () => {
         //console.log("Contact to ", this.props.id);
@@ -32,18 +29,18 @@ class ContactItem extends React.Component{
             })
         }
 
-    }
+    };
 
     onStar = () => {
         this.setState(() => {
             return {
                 star: !this.state.star
             }
-        })
+        });
         this.props.onFavorite();
-    }
+    };
     render (){
-        console.log("Item props ", this.props);
+        //console.log("Item props ", this.props);
 
         let btnContactName = "btn btn-default";
         if (this.state.clicked){

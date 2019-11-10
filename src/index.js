@@ -1,89 +1,112 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import { BrowserRouter as Router, Route, Redirect, Switch} from "react-router-dom";
+import {BrowserRouter as Router, Route, Switch} from "react-router-dom";
 
 // Componnents
 import Header from "./componnents/header/headerComponnent";
 import ContactLists from "./componnents/contactsList/contactList";
 import AddContact from "./componnents/addContact/addContact";
 import NotFound from "./componnents/noFound/notFound";
+import APIClient from "./componnents/APIClient/api";
 
-class App extends React.Component  {
-
-    counterID = 1000;
+class App extends React.Component {
 
     state = {
-        List : [
-            { id: 1, vip: false, sex: "women", avatar: 11 , contactName: "Camila Terry", contactDesc: "Camila Terry Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation" },
-            { id: 2, vip: true, sex: "men", avatar: 34 , contactName: "Bob Terry", contactDesc: "Bob Terry Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation" },
-            { id: 3, vip: false, sex: "women", avatar: 72 , contactName: "Jesica Smith", contactDesc: "Jesica Smith Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation" },
-            { id: 4, vip: false, sex: "men", avatar: 95 , contactName: "Jack Sparrow", contactDesc: "Jack Sparrow Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation" }
-        ],
+        List: [],
         findContact: "",
-        redirect: false
+        action: 'list'
     };
+
 
     RemoveContact = (id) => {
         //console.log("Remove contact => ", id);
-        this.setState((state) => {
-            const index = this.state.List.findIndex((elem) => elem.id === id);
-            //console.log("index", index);
+        const api = new APIClient();
+        api.deleteContact(id)
+            .then(responseJson => {
+                this.setState((state) => {
+                    const index = this.state.List.findIndex((elem) => elem.id === id);
+                    //console.log("index", index);
 
-            const firstPart = this.state.List.slice(0,index);
-            const lastPart = this.state.List.slice(index + 1);
-            const newList = [...firstPart, ...lastPart];
+                    const firstPart = this.state.List.slice(0, index);
+                    const lastPart = this.state.List.slice(index + 1);
+                    const newList = [...firstPart, ...lastPart];
 
-            return{
-                List: newList
-            }
-        })
+                    return {
+                        List: newList
+                    }
+                })
+            })
+            .catch(err => console.log(err.message));
     };
 
-    addNewContact = (sex, contactName, contactDesc) => {
-        return{
-            id: this.counterID++,
-            vip: false,
+    addNewContact = (sex, vip, contactName, contactDesc) => {
+        return {
+            vip: vip,
             sex: sex,
-            avatar: Math.floor(Math.random() * (99 - 1 + 1)) + 1,
-            contactName: contactName,
-            contactDesc: contactDesc
+            avatar_id: Math.ceil(Math.random() * 100),
+            name: contactName,
+            description: contactDesc
         }
     };
 
+    addContact = (sex, vip, name, description) => {
+        const contact = this.addNewContact(sex, vip, name, description);
+        const api = new APIClient();
+
+        api.addContact(contact)
+            .then(responseJson => {
+                this.setState((state) => {
+                    const newContactArr = [
+                        ...this.state.List,
+                        responseJson.contact
+                    ];
+
+                    return {
+                        List: newContactArr,
+                        action: 'list'
+                    }
+                });
+            })
+            .catch(err => console.log(err.message));
+    };
+
     onFavorite = (id) => {
+        const api = new APIClient();
+        const index = this.state.List.findIndex((elem) => elem.id === id);
+        const vip = this.state.List[index].vip;
+        api.setField(id, {'vip': !vip})
+            .then(responseJson => {
+            this.setState((state) => {
+                const newList = this.state.List.slice();
+                newList[index] = responseJson.contact;
 
-        this.setState((state) => {
-
-            const index = this.state.List.findIndex((elem) => elem.id === id);
-
-            const newVip = this.state.List.slice();
-            newVip[index].vip = !newVip[index].vip;
-            //console.log(newVip[index].vip);
-            return {
-                vip: !newVip
-            }
+                return {
+                    List: newList,
+                }
+            });
         })
-
+            .catch(err => console.log(err.message));
     };
 
-    addContact = (sex, name, description) => {
-        const contact = this.addNewContact(sex, name, description);
-
-        const newContactArr = [
-            ...this.state.List,
-            contact
-        ];
-
-        this.setState((state) => {
-            return{
-                List: newContactArr,
-                redirect: "/"
-            }
-        });
-
-
+    onAvatar = (id) => {
+        const api = new APIClient();
+        const index = this.state.List.findIndex((elem) => elem.id === id);
+        const ava = Math.ceil(Math.random() * 100);
+        console.log(this.state.List);
+        api.setField(id, {avatar_id: ava})
+            .then(responseJson => {
+                this.setState((state) => {
+                    let newList = this.state.List.slice(0, index);
+                    newList[index] = responseJson.contact;
+                    return {
+                        List: newList,
+                    }
+                });
+            })
+            .catch(err => console.log(err.message));
     };
+
 
     onSearch = (searchValue) => {
         this.setState({
@@ -98,31 +121,49 @@ class App extends React.Component  {
         }
 
         return items.filter((item) => {
-            return item.contactName.toLowerCase().indexOf(searchValue.toLowerCase()) > -1;
+            return item.name.toLowerCase().indexOf(searchValue.toLowerCase()) > -1;
         });
     };
 
-    render(){
-        const redirectTo = this.state.redirect;
-        if (redirectTo)
-        {
-            this.setState({redirect: false});
-            return <Router><Redirect  to={redirectTo} /></Router>
-        }
+    updateContacts = () => {
+        const contacts = new APIClient();
+        contacts.getContacts()
+            .then(responseJson => {
+                //console.log(responseJson);
+                this.setState({
+                    List: responseJson.contacts
+                });
+                //console.log(this.state.List);
+            })
+            .catch(err => console.log(err.message));
+    };
+
+    componentDidMount() {
+        this.updateContacts();
+    }
+
+    switchTo = (component) => {
+        //console.log(component);
+        this.setState({action: component});
+    };
+
+    render() {
         const showContacts = this.onShowContact(this.state.List, this.state.findContact);
-        return(
+        return (
             <section className="row-section">
                 <div className="container">
 
                     <Router>
-                        <Header />
+                        <Header switchTo={this.switchTo}/>
                         <Switch>
-                            <Route path="/"  exact render={() => <ContactLists ContactList={showContacts}
-                                                                               RemoveContact={this.RemoveContact}
-                                                                               onFavorite={this.onFavorite}
-                                                                               onSearch={this.onSearch} />} />
-                            <Route path="/add" exact render={() => <AddContact addContact={this.addContact} />} />
-                            <Route component={NotFound} />
+                            { this.state.action == 'list' &&
+                            <Route path="/" exact render={() => <ContactLists ContactList={showContacts}
+                                                                              RemoveContact={this.RemoveContact}
+                                                                              onFavorite={this.onFavorite}
+                                                                              onAvatar={this.onAvatar}
+                                                                              onSearch={this.onSearch}/>}/> }
+                            { this.state.action == 'add' && <Route path="/" exact render={() => <AddContact addContact={this.addContact}/>}/> }
+                            <Route component={NotFound}/>
                         </Switch>
                     </Router>
                 </div>
@@ -132,5 +173,5 @@ class App extends React.Component  {
 
 }
 
-ReactDOM.render(<App />, document.getElementById('root'));
+ReactDOM.render(<App/>, document.getElementById('root'));
 

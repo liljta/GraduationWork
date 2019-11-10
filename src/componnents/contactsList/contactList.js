@@ -4,12 +4,13 @@ import "./contact-list.css";
 import Search from "../search/search";
 
 
-const ContactLists = ({ContactList, RemoveContact, onFavorite, onSearch}) => {
+const ContactLists = ({ContactList, RemoveContact, onFavorite, onAvatar, onSearch}) => {
     const contactItem = ContactList.map((item) => {
+        const sex = item.sex === 0 ? 'women' : 'men';
         return(
-            <ContactItem onFavorite={() => onFavorite(item.id)} RemoveContact={() => RemoveContact(item.id)}  key={item.id} id={item.id} vip={item.vip} sex={item.sex} avatar={item.avatar} contactName={item.contactName} contactDesc={item.contactDesc} />
+            <ContactItem onFavorite={() => onFavorite(item.id)} onAvatar={() => onAvatar(item.id)} RemoveContact={() => RemoveContact(item.id)}  key={item.id} id={item.id} vip={item.vip} sex={sex} avatar={item.avatar_id} contactName={item.name} contactDesc={item.description} />
         )
-    })
+    });
 
     return(
         <div>
@@ -22,6 +23,6 @@ const ContactLists = ({ContactList, RemoveContact, onFavorite, onSearch}) => {
         </div>
 
     );
-}
+};
 
 export default ContactLists;
