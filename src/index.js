@@ -15,7 +15,7 @@ class App extends React.Component {
     state = {
         List: [],
         findContact: "",
-        action: 'list'
+        action: 'list',
     };
 
 
@@ -97,10 +97,10 @@ class App extends React.Component {
         api.setField(id, {avatar_id: ava})
             .then(responseJson => {
                 this.setState((state) => {
-                    let newList = this.state.List.slice(0, index);
+                    let newList = this.state.List;
                     newList[index] = responseJson.contact;
                     return {
-                        List: newList,
+                        List: newList
                     }
                 });
             })
@@ -146,6 +146,8 @@ class App extends React.Component {
         //console.log(component);
         this.setState({action: component});
     };
+
+
 
     render() {
         const showContacts = this.onShowContact(this.state.List, this.state.findContact);

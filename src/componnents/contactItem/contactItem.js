@@ -6,7 +6,7 @@ class ContactItem extends React.Component{
     state = {
         clicked: false,
         btnContectText: "Contact Now",
-        avatar: this.props.avatar,
+        //avatar: this.props.avatar,
         contactName: this.props.contactName,
     };
 
@@ -32,13 +32,16 @@ class ContactItem extends React.Component{
     };
 
     onStar = () => {
-        this.setState(() => {
-            return {
-                star: !this.state.star
-            }
-        });
         this.props.onFavorite();
     };
+
+    /*componentDidUpdate(prevProps) {
+        if(prevProps.avatar !== this.props.avatar) {
+            this.setState({avatar: this.props.avatar});
+        }
+    }*/
+
+
     render (){
         //console.log("Item props ", this.props);
 
@@ -55,7 +58,7 @@ class ContactItem extends React.Component{
         }
 
         const sex = this.props.sex;
-        const url = `https://randomuser.me/api/portraits/${sex}/${this.state.avatar}.jpg`;
+        const url = `https://randomuser.me/api/portraits/${sex}/${this.props.avatar}.jpg`;
         const Style = {
             color: this.props.vip ? "Purple" : "SteelBlue",
             cursor: "pointer"
