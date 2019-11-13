@@ -15,7 +15,7 @@ class APIClient{
         const result = await fetch(`${this._baseURL}contacts/${id}`, {
             method: 'DELETE'
         });
-        console.log(result);
+        //console.log(result);
         if(!result.ok){
             throw new Error("Can't delete contact!");
         }
@@ -54,6 +54,24 @@ class APIClient{
         //console.log(result);
         if(!result.ok){
             throw new Error("Can't set field!");
+        }
+        else{
+            return await result.json();
+        }
+    }
+
+    async editContact(contact) {
+        const result = await fetch(`${this._baseURL}contacts/${contact.id}`, {
+            method: 'PUT',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(contact)
+        });
+        //console.log(result);
+        if(!result.ok){
+            throw new Error("Can't update contact!");
         }
         else{
             return await result.json();

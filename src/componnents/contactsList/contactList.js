@@ -4,11 +4,11 @@ import "./contact-list.css";
 import Search from "../search/search";
 
 
-const ContactLists = ({ContactList, RemoveContact, onFavorite, onAvatar, onSearch}) => {
+const ContactLists = ({ContactList, RemoveContact, editContact, onFavorite, onAvatar, onSearch}) => {
     const contactItem = ContactList.map((item) => {
-        const sex = item.sex === 0 ? 'women' : 'men';
+        const sex = item.sex == 0 ? 'women' : 'men';
         return(
-            <ContactItem onFavorite={() => onFavorite(item.id)} onAvatar={() => onAvatar(item.id)} RemoveContact={() => RemoveContact(item.id)}  key={item.id} id={item.id} vip={item.vip} sex={sex} avatar={item.avatar_id} contactName={item.name} contactDesc={item.description} />
+            <ContactItem onFavorite={() => onFavorite(item.id)} onAvatar={() => onAvatar(item.id)} RemoveContact={() => RemoveContact(item.id)} editContact={() => editContact(item.id)}  key={item.id} id={item.id} vip={item.vip} sex={sex} avatar={item.avatar_id} contactName={item.name} contactDesc={item.description} />
         )
     });
 

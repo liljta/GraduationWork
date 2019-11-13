@@ -5,23 +5,19 @@ import { Link } from "react-router-dom";
 
 class MyLink extends Component{
 
-    state = {
-        switchActions: ["add", "list"],
-        linkTexts: ["Add new contact", "Back to contact list"],
-        screenNum: 0
-    };
+    actions = ["add", "edit", "list"];
+    linkTexts = ["Back to contact list", "Back to contact list", "Add new contact"];
+
     switchTo = (e) => {
         e.preventDefault();
-        this.props.switchTo(this.state.switchActions[this.state.screenNum]);
-        this.setState({
-            screenNum: 1 - this.state.screenNum
-        })
+        let screen = this.props.currentAction === 'list' ? 'add' : 'list';
+        this.props.switchTo(screen);
     };
 
     render(){
 
         return(
-            <Link  to="/" onClick={this.switchTo}>{this.state.linkTexts[this.state.screenNum]}</Link>
+            <Link  to="/" onClick={this.switchTo}>{this.linkTexts[this.actions.indexOf(this.props.currentAction)]}</Link>
         )
     }
 }

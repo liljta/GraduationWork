@@ -6,7 +6,7 @@ import {BrowserRouter as Router, Route, Switch} from "react-router-dom";
 // Componnents
 import Header from "./componnents/header/headerComponnent";
 import ContactLists from "./componnents/contactsList/contactList";
-import AddContact from "./componnents/addContact/addContact";
+import ManageContact from "./componnents/manageContact/manageContact";
 import NotFound from "./componnents/noFound/notFound";
 import APIClient from "./componnents/APIClient/api";
 
@@ -15,7 +15,9 @@ class App extends React.Component {
     state = {
         List: [],
         findContact: "",
-        action: 'list',
+        action: "list",
+        editIndex: false,
+        searchType: "all"
     };
 
 
@@ -36,6 +38,30 @@ class App extends React.Component {
                         List: newList
                     }
                 })
+            })
+            .catch(err => console.log(err.message));
+    };
+
+    editContact = (id) => {
+        this.state.editIndex = this.state.List.findIndex((elem) => elem.id === id);
+        this.switchTo('edit');
+    };
+
+    updateContact = (contact) => {
+        const api = new APIClient();
+        api.editContact(contact)
+            .then(responseJson => {
+                this.setState((state) => {
+
+                    const index = this.state.List.findIndex((elem) => elem.id === contact.id);
+                    const newList = this.state.List.slice();
+                    newList[index] = responseJson.contact;
+
+                    return {
+                        List: newList,
+                        action: 'list'
+                    }
+                });
             })
             .catch(err => console.log(err.message));
     };
@@ -93,7 +119,7 @@ class App extends React.Component {
         const api = new APIClient();
         const index = this.state.List.findIndex((elem) => elem.id === id);
         const ava = Math.ceil(Math.random() * 100);
-        console.log(this.state.List);
+        //console.log(this.state.List);
         api.setField(id, {avatar_id: ava})
             .then(responseJson => {
                 this.setState((state) => {
@@ -108,20 +134,33 @@ class App extends React.Component {
     };
 
 
-    onSearch = (searchValue) => {
+    onSearch = (searchValue, type) => {
         this.setState({
-            findContact: searchValue
-        })
+            findContact: searchValue,
+            searchType: type
+        });
     };
 
     onShowContact = (items, searchValue) => {
 
-        if (searchValue.length === 0) {
-            return items;
-        }
-
         return items.filter((item) => {
-            return item.name.toLowerCase().indexOf(searchValue.toLowerCase()) > -1;
+            const searchString = searchValue.toLowerCase();
+            let showContact = false;
+            if (searchValue.length === 0) {
+                showContact = true;
+            } else {
+                if (item.name.toLowerCase().indexOf(searchString) > -1) {
+                    showContact = true;
+                }
+                if (item.description.toLowerCase().indexOf(searchString) > -1) {
+                    showContact = true;
+                }
+            }
+console.log(this.state.searchType);
+            if (this.state.searchType === "vip") {
+                showContact = showContact && item.vip
+            }
+            return showContact;
         });
     };
 
@@ -156,15 +195,17 @@ class App extends React.Component {
                 <div className="container">
 
                     <Router>
-                        <Header switchTo={this.switchTo}/>
+                        <Header switchTo={this.switchTo} currentAction={this.state.action}/>
                         <Switch>
                             { this.state.action == 'list' &&
                             <Route path="/" exact render={() => <ContactLists ContactList={showContacts}
                                                                               RemoveContact={this.RemoveContact}
+                                                                              editContact={this.editContact}
                                                                               onFavorite={this.onFavorite}
                                                                               onAvatar={this.onAvatar}
-                                                                              onSearch={this.onSearch}/>}/> }
-                            { this.state.action == 'add' && <Route path="/" exact render={() => <AddContact addContact={this.addContact}/>}/> }
+                                                                              onSearch={this.onSearch} />}/> }
+                            { this.state.action == 'add' && <Route path="/" exact render={() => <ManageContact addContact={this.addContact} action="add"/>}/> }
+                            { this.state.action == 'edit' && <Route path="/" exact render={() => <ManageContact updateContact={this.updateContact} action="edit" item={this.state.List[this.state.editIndex]}/>}/> }
                             <Route component={NotFound}/>
                         </Switch>
                     </Router>

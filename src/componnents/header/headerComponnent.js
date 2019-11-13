@@ -11,7 +11,7 @@ class Header extends Component {
                 <div className="col text-center">
                     <ul>
                         <li className="text-center">
-                            <MyLink switchTo={this.props.switchTo}/>
+                            <MyLink switchTo={this.props.switchTo} currentAction={this.props.currentAction} />
                         </li>
                     </ul>
                     <h2 className="text-center"><span>Contact List</span>Created with <i

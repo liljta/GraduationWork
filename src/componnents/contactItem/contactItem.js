@@ -42,11 +42,11 @@ class ContactItem extends React.Component{
     }*/
 
 
-    render (){
+    render () {
         //console.log("Item props ", this.props);
 
         let btnContactName = "btn btn-default";
-        if (this.state.clicked){
+        if (this.state.clicked) {
             btnContactName = "btn btn-danger"
         }
 
@@ -63,28 +63,32 @@ class ContactItem extends React.Component{
             color: this.props.vip ? "Purple" : "SteelBlue",
             cursor: "pointer"
         };
-        return(
+        return (
             <div className="media">
                 <div className="media-left align-self-center">
-                    <img className="rounded-circle" src={url} />
+                    <img className="rounded-circle" src={url}/>
                 </div>
                 <div className="media-body">
                     <h4>{this.state.contactName}</h4>
                     <p style={Style}> {this.props.contactDesc}</p>
 
                 </div>
+                {/*
                 <div className="media-right align-self-center" onClick={this.onContactClick}>
                     <button type="button" className="btn btnContactName">{this.state.btnContectText}</button>
                 </div>
+                 */}
                 <div className="media-right align-self-center">
                     <button type="button" className="btn btn-success" onClick={this.onAvatar}>Rand avatar</button>
                 </div>
                 <div className="media-right align-self-center">
                     <i className={starClass} aria-hidden="true" onClick={this.onStar}></i>
+                    <i className="fa fa-2x fa-pencil edit" aria-hidden="true" onClick={this.props.editContact}></i>
                     <i className="fa fa-times fa-2x close" aria-hidden="true" onClick={this.props.RemoveContact}></i>
                 </div>
             </div>
         )
     }
+
 }
 export default ContactItem;
