@@ -1,7 +1,7 @@
 import React from 'react';
 import "./index.css";
 
-class ContactItem extends React.Component{
+class ContactItem extends React.Component {
 
     state = {
         clicked: false,
@@ -16,13 +16,12 @@ class ContactItem extends React.Component{
 
     onContactClick = () => {
         //console.log("Contact to ", this.props.id);
-        if (!this.state.clicked){
+        if (!this.state.clicked) {
             this.setState({
                 clicked: true,
                 btnContectText: "Clicked",
             })
-        }
-        else {
+        } else {
             this.setState({
                 clicked: false,
                 btnContectText: "Contact Now"
@@ -42,7 +41,7 @@ class ContactItem extends React.Component{
     }*/
 
 
-    render () {
+    render() {
         //console.log("Item props ", this.props);
 
         let btnContactName = "btn btn-default";
@@ -64,31 +63,45 @@ class ContactItem extends React.Component{
             cursor: "pointer"
         };
         return (
-            <div className="media">
-                <div className="media-left align-self-center">
-                    <img className="rounded-circle" src={url}/>
-                </div>
-                <div className="media-body">
-                    <h4>{this.state.contactName}</h4>
-                    <p style={Style}> {this.props.contactDesc}</p>
+            <div className="row" >
+                <div className="col-md-8 col-sm-12">
+                    <div className="media">
+                        <div className="media-left align-self-center">
+                            <img className="rounded-circle" src={url} alt="avatar"/>
+                        </div>
+                        <div className="media-body">
+                            <h4>{this.state.contactName}</h4>
+                            <p style={Style}> {this.props.contactDesc}</p>
 
+                        </div>
+                    </div>
                 </div>
                 {/*
                 <div className="media-right align-self-center" onClick={this.onContactClick}>
                     <button type="button" className="btn btnContactName">{this.state.btnContectText}</button>
                 </div>
                  */}
-                <div className="media-right align-self-center">
-                    <button type="button" className="btn btn-success" onClick={this.onAvatar}>Rand avatar</button>
+                <div className="col-md-4 col-sm-12 align-self-center text-center">
+                    <div className="media-right action-buttons ">
+                        {/*
+                        <button type="button" className="btn btn-success" onClick={this.onAvatar}>Rand avatar
+                        </button>
+                        */}
+                        <i className="fa fa-refresh fa-2x reload-avatar" title="Random avatar" aria-hidden="true" onClick={this.onAvatar}></i>
+                        <i className={starClass} title="VIP Contact"aria-hidden="true" onClick={this.onStar}></i>
+                        <i className="fa fa-2x fa-pencil edit" title="Edit Contact" aria-hidden="true"
+                           onClick={this.props.editContact}></i>
+                        <i className="fa fa-times fa-2x close-btn" title="Delete Contact" aria-hidden="true"
+                           onClick={this.props.RemoveContact}></i>
+                    </div>
                 </div>
-                <div className="media-right align-self-center">
-                    <i className={starClass} aria-hidden="true" onClick={this.onStar}></i>
-                    <i className="fa fa-2x fa-pencil edit" aria-hidden="true" onClick={this.props.editContact}></i>
-                    <i className="fa fa-times fa-2x close" aria-hidden="true" onClick={this.props.RemoveContact}></i>
-                </div>
+
+
             </div>
+
         )
     }
 
 }
+
 export default ContactItem;

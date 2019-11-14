@@ -2,7 +2,7 @@
     cursor: pointer;
     color: yellow;
 }
-.close{
+.close-btn{
     cursor: pointer;
     color: red;
 }
@@ -10,6 +10,11 @@
 .edit{
     cursor: pointer;
     color: blue;
+}
+
+.reload-avatar {
+    cursor: pointer;
+    color: green;
 }
 
 .btn-success:hover {
@@ -33,3 +38,8 @@
     background: #6B456A;
     color: white;
 }
+
+.action-buttons i{
+    padding-right: 10px;
+}
+
